@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8">
+    <div class="border-b border-gray-200 pb-5">
+        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Meu Perfil</h1>
+        <p class="mt-2 text-sm text-gray-500">Gerencie suas informações pessoais e como você aparece na comunidade.</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="p-4 rounded-md bg-green-50 border border-green-200">
+                <p class="text-sm font-medium text-green-800">{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" class="space-y-8">
+        {% csrf_token %}
+        
+        <!-- Seção: Dados da Conta -->
+        <div class="bg-white shadow-sm border border-gray-100 rounded-xl p-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <svg class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Configurações da Conta
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700">Nome de Usuário (Username)</label>
+                    <input type="text" value="{{ user.username }}" disabled class="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-500 cursor-not-allowed">
+                </div>
+                {% for field in u_form %}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Seção: Dados do Perfil Público -->
+        <div class="bg-white shadow-sm border border-gray-100 rounded-xl p-8 shadow-blue-50/50 pt-10 relative overflow-hidden">
+            <div class="absolute top-0 right-0 left-0 h-2 {% if user.is_professional %}bg-green-500{% else %}bg-orange-500{% endif %}"></div>
+            
+            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <svg class="h-6 w-6 mr-2 {% if user.is_professional %}text-green-600{% else %}text-orange-600{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Perfil de {% if user.is_professional %}Profissional{% else %}Cliente{% endif %}
+            </h2>
+            
+            <div class="space-y-6">
+                {% for field in p_form %}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <p class="mt-1 text-xs text-red-600">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="flex justify-end pt-4">
+            <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-extrabold py-3 px-12 rounded-lg shadow-lg transition-all active:scale-95">
+                Salvar Alterações do Perfil
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

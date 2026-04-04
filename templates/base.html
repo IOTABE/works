@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidade de Serviços</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.11"></script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-900 min-h-screen flex flex-col">
+    <nav class="bg-blue-700 shadow text-white">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold tracking-tight">ComunidApp</a>
+            <div class="flex items-center space-x-6">
+                {% if user.is_authenticated %}
+                    <div class="flex items-center space-x-4">
+                        {% if user.is_professional %}
+                            <a href="{% url 'create_offer' %}" class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm">
+                                + Anunciar Serviço
+                            </a>
+                        {% elif user.is_client %}
+                            <a href="{% url 'create_request' %}" class="bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm">
+                                + Pedir Serviço
+                            </a>
+                        {% endif %}
+                        
+                        <div class="flex items-center border-l border-blue-600 pl-4 space-x-4">
+                            <a href="{% url 'profile' %}" class="text-sm font-bold hover:text-blue-200 transition">Meu Perfil</a>
+                            <a href="{% url 'my_services' %}" class="text-sm font-bold hover:text-blue-200 transition">Meus Anúncios</a>
+                            <span class="text-sm font-medium opacity-90">Olá, <span class="font-bold">{{ user.username }}</span></span>
+                            <form action="{% url 'logout' %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-xs bg-blue-800 hover:bg-red-600 text-white px-2 py-1 rounded transition">
+                                    Sair
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="font-bold hover:text-blue-200 transition">Entrar</a>
+                    <a href="{% url 'register' %}" class="bg-white text-blue-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-50 transition shadow-sm">
+                        Cadastre-se
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

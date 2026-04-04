@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="mb-8 flex justify-between items-end">
+        <div>
+            <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Meus Anúncios</h1>
+            <p class="text-gray-600 mt-2">Gerencie suas publicações ativas na comunidade.</p>
+        </div>
+        {% if user.is_professional %}
+            <a href="{% url 'create_offer' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition">
+                + Nova Oferta
+            </a>
+        {% elif user.is_client %}
+            <a href="{% url 'create_request' %}" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition">
+                + Novo Pedido
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Título / Categoria</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tipo</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Data</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for obj in items %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4">
+                        <div class="text-sm font-bold text-gray-900">{{ obj.item.title }}</div>
+                        <div class="text-xs text-gray-500">{% if obj.item.category %}{{ obj.item.category.name }}{% else %}Sem Categoria{% endif %}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if obj.type == 'offer' %}
+                            <span class="px-2 py-1 text-xs font-bold bg-green-100 text-green-800 rounded-full italic">Oferta</span>
+                        {% else %}
+                            <span class="px-2 py-1 text-xs font-bold bg-orange-100 text-orange-800 rounded-full italic">Pedido</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        {{ obj.item.created_at|date:"d/m/Y" }}
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-3">
+                        <form action="{% url 'delete_service' obj.item.pk obj.type %}" method="post" class="inline" onsubmit="return confirm('Tem certeza que deseja excluir este anúncio?')">
+                            {% csrf_token %}
+                            <button type="submit" class="text-sm font-bold text-red-600 hover:text-red-800 transition">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="px-6 py-12 text-center text-gray-500 italic">
+                        Você ainda não publicou nenhum anúncio.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-10">
+        <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight leading-none mb-3">Mural da Comunidade</h1>
+        <p class="text-gray-500 text-lg">Encontre o que você precisa ou ofereça seu talento.</p>
+    </div>
+
+    <!-- Barra de Busca, Filtros de Tipo e Categorias -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8 space-y-6">
+        <!-- Busca -->
+        <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </span>
+            <input type="text" name="q" value="{{ search_query }}"
+                   hx-get="{% url 'home' %}" hx-trigger="keyup changed delay:500ms" hx-target="#feed" hx-push-url="true"
+                   hx-include="[name='type'], [name='category']"
+                   class="block w-full pl-10 pr-3 py-4 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all sm:text-sm" 
+                   placeholder="Pesquise por títulos ou palavras-chave...">
+        </div>
+
+        <div class="space-y-4">
+            <!-- Filtros de Tipo -->
+            <div class="flex flex-wrap items-center gap-3">
+                <input type="hidden" name="type" value="{{ filter_type }}">
+                <button hx-get="?type=all" hx-target="#feed" hx-include="[name='q'], [name='category']" hx-push-url="true" 
+                        class="px-5 py-2 text-sm font-bold rounded-full transition-all {% if filter_type == 'all' %}bg-blue-600 text-white shadow-md{% else %}bg-gray-100 text-gray-600 hover:bg-gray-200{% endif %}">
+                    🏠 Todos
+                </button>
+                <button hx-get="?type=offers" hx-target="#feed" hx-include="[name='q'], [name='category']" hx-push-url="true" 
+                        class="px-5 py-2 text-sm font-bold rounded-full transition-all {% if filter_type == 'offers' %}bg-green-600 text-white shadow-md{% else %}bg-green-50 text-green-700 hover:bg-green-100{% endif %}">
+                    🤝 Ofertas
+                </button>
+                <button hx-get="?type=requests" hx-target="#feed" hx-include="[name='q'], [name='category']" hx-push-url="true" 
+                        class="px-5 py-2 text-sm font-bold rounded-full transition-all {% if filter_type == 'requests' %}bg-orange-600 text-white shadow-md{% else %}bg-orange-50 text-orange-700 hover:bg-orange-100{% endif %}">
+                    💡 Pedidos
+                </button>
+            </div>
+
+            <!-- Filtros de Categorias -->
+            <div class="pt-2 border-t border-gray-50">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Filtrar por Categoria</p>
+                <div class="flex flex-wrap items-center gap-2">
+                    <input type="hidden" name="category" value="{{ category_slug }}">
+                    <button hx-get="?category=all" hx-target="#feed" hx-include="[name='q'], [name='type']" hx-push-url="true" 
+                            class="px-4 py-1.5 text-xs font-bold rounded-lg transition-all {% if category_slug == 'all' %}bg-gray-800 text-white shadow-sm{% else %}bg-white border border-gray-200 text-gray-500 hover:border-gray-400{% endif %}">
+                        Qualquer uma
+                    </button>
+                    {% for cat in categories %}
+                    <button hx-get="?category={{ cat.slug }}" hx-target="#feed" hx-include="[name='q'], [name='type']" hx-push-url="true" 
+                            class="px-4 py-1.5 text-xs font-bold rounded-lg border transition-all {% if category_slug == cat.slug %}bg-blue-100 border-blue-300 text-blue-800 shadow-sm{% else %}bg-white border-gray-100 text-gray-500 hover:border-gray-300{% endif %}">
+                        {{ cat.name }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="feed" class="min-h-[300px]">
+        {% include 'services/partials/feed_list.html' %}
+    </div>
+</div>
+{% endblock %}

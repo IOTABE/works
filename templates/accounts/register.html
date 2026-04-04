@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white rounded-lg shadow-sm border border-gray-100 p-8 mt-4 mb-10">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Criar uma Nova Conta</h1>
+    
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        
+        <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition mt-6">
+            Concluir Registro
+        </button>
+    </form>
+    
+    <p class="mt-6 text-center text-sm text-gray-600">
+        Já possui conta? <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Entrar</a>
+    </p>
+</div>
+
+<!-- Tailwind overrides para o form padrao do django -->
+<style>
+    form input[type="text"],
+    form input[type="password"],
+    form input[type="email"] {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        margin-top: 0.25rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+    }
+    form input[type="radio"] {
+        margin-right: 0.5rem;
+        margin-top: 0.3rem;
+    }
+    form ul {
+        margin-top: 0.5rem;
+    }
+    form ul li label {
+        display: flex;
+        font-weight: 500;
+        color: #374151;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
