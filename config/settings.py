@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-c6q6u&8_+$w1932lwr9e#i!_r5%!gf*uccelntg)h62%zwp_%i')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = ['batistas.saasbarber.top', '173.249.8.187', 'localhost', '127.0.0.1']
 
