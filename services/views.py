@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
 from .models import ServiceOffer, ServiceRequest, Category
-from .forms import ServiceOfferForm, ServiceRequestForm
+from .forms import ServiceOfferForm, ServiceRequestForm, CategoryForm
 
 def home(request):
     filter_type = request.GET.get('type', 'all')
@@ -118,3 +118,58 @@ def delete_service(request, pk, type_service):
         return redirect('my_services')
         
     return redirect('my_services')
+
+# CRUD Categorias (Admin Only)
+
+def superuser_required(user):
+    return user.is_superuser
+
+@login_required
+@user_passes_test(superuser_required)
+def category_list(request):
+    categories = Category.objects.all().order_by('name')
+    return render(request, 'services/category_list.html', {'categories': categories})
+
+@login_required
+@user_passes_test(superuser_required)
+def category_create(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('category_list')
+    else:
+        form = CategoryForm()
+    
+    return render(request, 'services/category_form.html', {
+        'form': form,
+        'title': 'Nova Categoria',
+        'button_text': 'Criar Categoria'
+    })
+
+@login_required
+@user_passes_test(superuser_required)
+def category_update(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('category_list')
+    else:
+        form = CategoryForm(instance=category)
+    
+    return render(request, 'services/category_form.html', {
+        'form': form,
+        'title': 'Editar Categoria',
+        'button_text': 'Salvar Alterações'
+    })
+
+@login_required
+@user_passes_test(superuser_required)
+def category_delete(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        category.delete()
+        return redirect('category_list')
+    return redirect('category_list')
