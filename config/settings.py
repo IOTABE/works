@@ -104,7 +104,7 @@ if DATABASE_URL:
             'USER': url.username,
             'PASSWORD': url.password,
             'HOST': url.hostname,
-            'PORT': url.port,
+            'PORT': 5432,
         }
     }
 else:
