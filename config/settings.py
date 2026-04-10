@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-c6q6u&8_+$w1932lwr9e#i!_r5%!gf*uccelntg)h62%zwp_%i')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['batistas.saasbarber.top', '173.249.8.187', 'localhost', '127.0.0.1']
 
@@ -97,7 +97,6 @@ import urllib.parse
 DATABASE_URL = os.getenv('DATABASE_URL')
 if DATABASE_URL:
     url = urllib.parse.urlparse(DATABASE_URL)
-    print(url.port)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',

@@ -21,8 +21,13 @@ def profile_view(request):
     if user.is_professional:
         profile = user.professional_profile
         profile_form_class = ProfessionalProfileForm
-    else:
+    elif user.is_client:
         profile = user.client_profile
+        profile_form_class = ClientProfileForm
+    else:
+        # Create a default client profile if missing (e.g., for superusers)
+        from .models import ClientProfile
+        profile, created = ClientProfile.objects.get_or_create(user=user)
         profile_form_class = ClientProfileForm
 
     if request.method == 'POST':
