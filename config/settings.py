@@ -97,6 +97,7 @@ import urllib.parse
 DATABASE_URL = os.getenv('DATABASE_URL')
 if DATABASE_URL:
     url = urllib.parse.urlparse(DATABASE_URL)
+    print(url.port)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -151,7 +152,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
