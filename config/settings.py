@@ -31,6 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['batistas.saasbarber.top', '173.249.8.187', 'localhost', '127.0.0.1']
 
+WSGI_APPLICATION = 'config.wsgi.application'
+
 CSRF_TRUSTED_ORIGINS = [
     'https://batistas.saasbarber.top',
     'http://batistas.saasbarber.top',
@@ -150,7 +152,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
