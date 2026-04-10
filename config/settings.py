@@ -31,6 +31,12 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['batistas.saasbarber.top', '173.249.8.187', 'localhost', '127.0.0.1']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://batistas.saasbarber.top',
+    'http://batistas.saasbarber.top',
+    'http://173.249.8.187',
+]
+
 
 # Application definition
 
