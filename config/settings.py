@@ -27,9 +27,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-c6q6u&8_+$w1932lwr9e#i!_r5%!gf*uccelntg)h62%zwp_%i')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['batistas.saasbarber.top', '173.249.8.187', 'localhost', '127.0.0.1']
+
+WSGI_APPLICATION = 'config.wsgi.application'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://batistas.saasbarber.top',
+    'http://batistas.saasbarber.top',
+    'http://173.249.8.187',
+]
 
 
 # Application definition
@@ -96,8 +104,7 @@ if DATABASE_URL:
             'USER': url.username,
             'PASSWORD': url.password,
             'HOST': url.hostname,
-            'PORT': url.port,
-        }
+            'PORT': url.port,        }
     }
 else:
     DATABASES = {
@@ -144,6 +151,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
