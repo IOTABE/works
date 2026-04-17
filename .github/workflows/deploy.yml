@@ -1,0 +1,41 @@
+name: Deploy via aaPanel
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Executar comandos no aaPanel via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            # 1. Entrar na pasta do projeto (Ajuste o caminho!)
+            cd /www/wwwroot/works
+            
+            # 2. Puxar as novidades do Git
+            git pull origin main
+            
+            # 3. Ativar o VirtualEnv do aaPanel 
+            # O aaPanel costuma criar em um caminho como: venv/bin/activate
+            source 038703c7230ae012e3c783ace1d09d64_venv/bin/activate
+            
+            # 4. Atualizar dependências e Banco
+            pip install -r requirements.txt
+            python manage.py migrate --noinput
+            python manage.py collectstatic --noinput
+            
+            # 5. Reiniciar o serviço (Geralmente o aaPanel usa o BT-Panel ou Supervisor)
+            # Se você usa o Python Manager do aaPanel, o comando abaixo ajuda:
+            sudo bt 1 # Reinicia o painel (em casos extremos) ou reinicie o serviço específico
+            
+            # DICA: Se você usa o Supervisor no aaPanel para rodar o Gunicorn:
+            # supervisorctl restart seu_app_django
