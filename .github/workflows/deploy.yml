@@ -33,9 +33,9 @@ jobs:
             python manage.py migrate --noinput
             python manage.py collectstatic --noinput
             
-            # 5. Reiniciar o serviço (Geralmente o aaPanel usa o BT-Panel ou Supervisor)
-            # Se você usa o Python Manager do aaPanel, o comando abaixo ajuda:
-            sudo bt 1 # Reinicia o painel (em casos extremos) ou reinicie o serviço específico
+            # 5. Reiniciar a aplicação no Python Manager do aaPanel
+            # Dependendo da versão do Python Manager, reiniciar o painel recarrega os projetos:
+            sudo bt 1 
             
-            # DICA: Se você usa o Supervisor no aaPanel para rodar o Gunicorn:
-            # supervisorctl restart seu_app_django
+            # (Alternativa Menos Agressiva) Matar os processos do projeto para auto-restart:
+            # pkill -f "python_manager_works" # Troque para o nome correto caso precise
